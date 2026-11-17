@@ -15,6 +15,7 @@ import { initializeEditorI18n, t, uiText } from "./i18n";
 import { editorMcpRegistry as registry } from "./McpRegistry";
 import { FrameDebugger } from "./performance/FrameDebugger";
 import { apiKnowledge } from "./ApiKnowledge";
+import { mcpStatusBar } from "./McpStatusBar";
 import { registerApiKnowledgeTools } from "./tools/ApiKnowledgeTools";
 import { Profiler } from "./performance/Profiler";
 import { SceneManagement } from "./tools/SceneManagement";
@@ -87,15 +88,16 @@ IEditor.standaloneMcp.registerAgent = (credential, registerTools, authorize) => 
 
 @IEditor.regClass()
 export class StandaloneMcpEditor {
-    static reportServiceStarted(endpoint: string): void {
-        const statusBar = (Editor as typeof Editor & { statusBar?: { createItem?: unknown } }).statusBar;
-        if (typeof statusBar?.createItem === "function") return;
-        console.info(`[LayaAir MCP] ${uiText("serviceStarted")} ${endpoint}`);
+    static reportServiceEndpoint(endpoint: string | null): void {
+        if (!mcpStatusBar.setEndpoint(endpoint) && endpoint) {
+            console.info(`[LayaAir MCP] ${uiText("serviceStarted")} ${endpoint}`);
+        }
     }
 
     @IEditor.onLoad
     static onLoad(): void {
         initializeEditorI18n();
+        mcpStatusBar.start();
         // IDE feature packs finish onLoad before package and project scripts run onLoad.
         SceneManagement.register();
         ThemeManagement.register();
@@ -115,6 +117,7 @@ export class StandaloneMcpEditor {
 
     @IEditor.onUnload
     static onUnload(): void {
+        mcpStatusBar.stop();
         registry.setChangeListener(undefined);
         apiKnowledge.stop();
         unregisterApiKnowledge?.();

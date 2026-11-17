@@ -7,7 +7,7 @@ LayaAir IDE 的 MCP 插件。同一份插件支持 **IDE 3.3.13 和 3.4.3**，�
 - **IDE 3.3**：在「开发者 → 包管理器」从磁盘添加，解压 `layaair-mcp.layapkg`，选择含 `package.json` 的解压目录。
 - **IDE 3.4**：在「开发者 → 包管理器」选择「安装本地 Laya Package」，打开 `layaair-mcp.layapkg`。也支持从磁盘添加已解压的目录。
 
-打开项目时默认启动 MCP 服务。IDE 3.3 在控制台打印连接地址。IDE 3.4 搭配 LayaAir Agent 时，可将鼠标悬停在状态栏的 MCP 图标上查看。
+打开项目时默认启动 MCP 服务。IDE 3.3 在控制台打印连接地址。IDE 3.4 支持状态栏 API 时，服务就绪后显示 MCP 图标。悬停可查看连接地址，点击可复制地址。
 
 MCP 服务复用当前项目的 LiveServer HTTP 预览端口，IDE 默认设置为 `18090`。将 `http://127.0.0.1:<预览端口>/ai/mcp` 填入支持 Streamable HTTP 的本机 MCP 客户端。
 

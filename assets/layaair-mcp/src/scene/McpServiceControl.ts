@@ -37,7 +37,7 @@ export class McpServiceControl {
                         case "start": this.start(); break;
                         case "stop":
                             await this.server.stop();
-                            this.startupReported = false;
+                            this.reportStopped();
                             break;
                         case "save": {
                             const next = validateSettings(command.settings);
@@ -57,7 +57,13 @@ export class McpServiceControl {
 
     dispose(): Promise<void> {
         this.disposing = true;
-        return this.enqueue(() => this.server.dispose());
+        return this.enqueue(async () => {
+            try {
+                await this.server.dispose();
+            } finally {
+                this.reportStopped();
+            }
+        });
     }
 
     reportReady(): void {
@@ -65,8 +71,18 @@ export class McpServiceControl {
         const { state, endpoint } = this.server.getStatus();
         if (state !== "running" || !endpoint) return;
         this.startupReported = true;
-        void EditorEnv.runUIScript(MCP_EDITOR_COMMANDS.reportServiceStarted, endpoint).catch((error: unknown) => {
-            console.debug("[LayaAir MCP] Could not report startup to the Editor", error);
+        this.reportEndpoint(endpoint);
+    }
+
+    private reportStopped(): void {
+        if (!this.startupReported) return;
+        this.startupReported = false;
+        this.reportEndpoint(null);
+    }
+
+    private reportEndpoint(endpoint: string | null): void {
+        void EditorEnv.runUIScript(MCP_EDITOR_COMMANDS.reportServiceEndpoint, endpoint).catch((error: unknown) => {
+            console.debug("[LayaAir MCP] Could not report service status to the Editor", error);
         });
     }
 

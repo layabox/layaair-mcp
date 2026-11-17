@@ -151,6 +151,8 @@ function fakeIDE(liveServer) {
 test(`IDE ${ideVersion} serves tools with ${optionalApisLoaded ? "available" : "missing"} optional APIs`, async (t) => {
     const startupPrefix = "[LayaAir MCP] MCP service started at ";
     const consoleInfo = t.mock.method(console, "info");
+    const copiedAddresses = [];
+    let statusItem;
     const startupMessages = () => consoleInfo.mock.calls
         .map(({ arguments: [message] }) => message)
         .filter((message) => typeof message === "string" && message.startsWith(startupPrefix));
@@ -240,7 +242,22 @@ test(`IDE ${ideVersion} serves tools with ${optionalApisLoaded ? "available" : "
         assert.equal(platform.editorSyncRequests.length, 0, "Scene must allow Editor to publish the first snapshot");
         // In the IDE, feature packs mount their APIs after script evaluation and before plugin onLoad.
         if (optionalApisLoaded) {
-            Editor.statusBar = { createItem() { assert.fail("The Agent plugin owns the status bar item"); } };
+            Editor.statusBar = { createItem(id, options) {
+                assert.equal(id, "com.layaair.mcp.status");
+                assert.ok(!statusItem || statusItem.disposed, "Only one MCP status item may be live");
+                assert.equal(options.visible, false, "Hide the status item until the service is ready");
+                statusItem = {
+                    options,
+                    disposed: false,
+                    update(changes) {
+                        assert.equal(this.disposed, false);
+                        this.options = { ...this.options, ...changes };
+                    },
+                    dispose() { this.disposed = true; },
+                };
+                return statusItem;
+            } };
+            Editor.clipboard = { writeText(value) { copiedAddresses.push(value); } };
             mountOptionalApis();
         }
         for (const hook of platform.editorLoads) await hook();
@@ -250,6 +267,14 @@ test(`IDE ${ideVersion} serves tools with ${optionalApisLoaded ? "available" : "
             return status?.state === "running" ? status : null;
         });
         assert.equal(status.endpoint, liveUrl + "/ai/mcp");
+        if (optionalApisLoaded) {
+            await waitFor(() => statusItem.options.visible);
+            assert.equal(statusItem.options.text, "MCP");
+            assert.equal(statusItem.options.icon, "editorResources/layaair-mcp/mcp.svg");
+            assert.equal(statusItem.options.tooltip, `MCP service started at\n${status.endpoint}`);
+            statusItem.options.onClick();
+            assert.deepEqual(copiedAddresses, [status.endpoint]);
+        }
         const expectedStartupMessages = optionalApisLoaded ? [] : [`${startupPrefix}${status.endpoint}`];
         assert.deepEqual(startupMessages(), expectedStartupMessages);
         const configure = (command) => platform.execute("StandaloneMcpScene.serviceSettings", command);
@@ -495,16 +520,29 @@ test(`IDE ${ideVersion} serves tools with ${optionalApisLoaded ? "available" : "
             await client.close();
             const stopped = await configure({ action: "stop" });
             assert.equal(stopped.status.state, "stopped");
+            if (optionalApisLoaded) await waitFor(() => statusItem.options.visible === false);
             assert.equal((await fetch(status.endpoint)).status, 503);
             const saved = await configure({ action: "save", settings: { autoStart: false } });
             assert.equal(saved.error, undefined);
             assert.deepEqual(JSON.parse(await readFile(settingsFile, "utf8")), { autoStart: false });
             assert.equal((await configure({ action: "start" })).status.endpoint, status.endpoint);
+            if (optionalApisLoaded) await waitFor(() => statusItem.options.visible);
             assert.deepEqual(startupMessages(), [...expectedStartupMessages, ...expectedStartupMessages]);
             assert.equal(routeCount, 3);
             const queryExit = once(queryChildren.at(-1), "exit", { signal: AbortSignal.timeout(3000) });
             for (const hook of platform.editorUnloads) await hook();
             await queryExit;
+            if (optionalApisLoaded) {
+                const previousItem = statusItem;
+                assert.equal(previousItem.disposed, true);
+                Editor.cliMode = true;
+                for (const hook of platform.editorLoads) await hook();
+                await waitFor(() => statusItem.options.visible);
+                assert.notEqual(statusItem, previousItem, "Editor reload must restore the status of the running service");
+                assert.ok(statusItem.options.tooltip.includes(status.endpoint));
+                for (const hook of platform.editorUnloads) await hook();
+                assert.equal(statusItem.disposed, true);
+            }
             for (const hook of platform.sceneUnloads) await hook();
         }
         assert.equal((await platform.execute("StandaloneMcpScene.getServerStatus")).state, "stopped");

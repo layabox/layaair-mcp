@@ -10,7 +10,7 @@ export const MCP_EDITOR_COMMANDS = {
     invokeCallback: "StandaloneMcpEditor.invokeCallback",
     requestToolPermission: "StandaloneMcpEditor.requestToolPermission",
     dispatchHandlerSync: "StandaloneMcpEditor.requestHandlerSync",
-    reportServiceStarted: "StandaloneMcpEditor.reportServiceStarted",
+    reportServiceEndpoint: "StandaloneMcpEditor.reportServiceEndpoint",
 } as const;
 
 export const MCP_EDITOR_SYNC_STATE_KEY = "com.layaair.mcp.mcp-editor-sync-state";
