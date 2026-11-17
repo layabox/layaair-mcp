@@ -17,5 +17,3 @@ npm run build
 在工程根目录运行 `npm run build`，用 LayaAir CLI 将现有插件文件导出为 `dist/layaair-mcp.layapkg`。
 
 安装包同时包含 MCP Server 核心源码和预编译产物。安装时无需运行 npm。
-
-`npm run typecheck` 检查类型，可用 `LAYA_IDE_TYPES` 指定 IDE 的 `engine/types`。运行 `npm test` 可测试插件，可用 `LAYA_IDE_SOURCE` 指定 IDE 源码目录，用 `LAYA_TEST_OPTIONAL_APIS=1` 验证可选 API 已加载时的工具行为。
