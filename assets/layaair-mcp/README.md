@@ -19,7 +19,7 @@ MCP 服务复用当前项目的 LiveServer HTTP 预览端口，IDE 默认设置�
 
 ## 与 LayaAir Agent 一起使用
 
-Agent 启动 ACPCore 后，使用 IDE 预览端口登记 `/ai/mcp`。知识库工具通过包依赖注册并在后台同步。持有 Agent 调用凭据的连接沿用 Agent 权限设置，其他客户端使用 IDE 原生确认。
+Agent 启动 ACPCore 后，使用 IDE 预览端口登记 `/ai/mcp`。持有 Agent 调用凭据的连接沿用 Agent 权限设置，其他客户端使用 IDE 原生确认。
 
 ## 插件目录
 
