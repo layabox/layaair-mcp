@@ -1,0 +1,7 @@
+{
+  "name": "com.layaair.mcp",
+  "displayName": "LayaAir MCP",
+  "description": "MCP server for LayaAir IDE projects",
+  "version": "1.0.0",
+  "types": "types/index.d.ts"
+}

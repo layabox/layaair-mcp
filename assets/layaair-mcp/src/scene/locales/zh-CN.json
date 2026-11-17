@@ -1,0 +1,20 @@
+{
+  "permission.denied": "MCP 工具 {{toolName}} 需要 {{access}} 权限，但当前会话没有有效授权",
+  "registry.methodRequired": "MCP {{kind}} 必须装饰方法：{{propertyKey}}",
+  "registry.nameRequired": "MCP Tool/Prompt 名称不能为空",
+  "editorSync.bridgeTimeout": "等待 Editor MCP 同步桥响应超时",
+  "editorSync.bridgeNotReady": "Editor MCP 同步桥尚未就绪",
+  "editorSync.snapshotTimeout": "等待 Editor MCP 快照确认超时",
+  "editorSync.failed": "MCP Editor 工具重新同步请求失败，Editor 服务尚未就绪",
+  "editorSnapshot.invalid": "MCP Editor Handler 快照格式无效",
+  "editorSnapshot.versionInvalid": "MCP Editor Handler 快照版本无效",
+  "editorSnapshot.handlerInvalid": "MCP Editor Handler 格式无效",
+  "editorSnapshot.kindInvalid": "MCP Editor Handler 类型无效",
+  "editorSnapshot.nameMissing": "MCP Editor Handler 缺少名称",
+  "editorSnapshot.callbackMissing": "MCP Editor Handler {{name}} 缺少回调 ID",
+  "editorSnapshot.paramsInvalid": "MCP Editor Handler {{name}} 参数格式无效",
+  "editorSnapshot.accessInvalid": "MCP Editor Handler {{name}} 权限类型无效",
+  "editorSnapshot.revisionInvalid": "MCP Editor Handler 快照 revision 无效",
+  "editorSnapshot.actionAccessInvalid": "MCP Editor Handler {{name}} action 权限格式无效",
+  "editorSnapshot.actionAccessTypeInvalid": "MCP Editor Handler {{name}} action 权限类型无效"
+}

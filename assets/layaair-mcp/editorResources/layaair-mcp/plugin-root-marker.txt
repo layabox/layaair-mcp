@@ -1,0 +1,2 @@
+LayaAir MCP plugin root marker.
+Used by the editor integration to locate the plugin installation root.

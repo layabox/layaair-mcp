@@ -1,0 +1,20 @@
+{
+  "permission.denied": "MCP tool {{toolName}} requires {{access}} permission, but the current session has no valid authorization",
+  "registry.methodRequired": "MCP {{kind}} must decorate a method: {{propertyKey}}",
+  "registry.nameRequired": "MCP Tool/Prompt name is required",
+  "editorSync.bridgeTimeout": "Timed out waiting for the Editor MCP sync bridge",
+  "editorSync.bridgeNotReady": "The Editor MCP sync bridge is not ready",
+  "editorSync.snapshotTimeout": "Timed out waiting for Editor MCP snapshot confirmation",
+  "editorSync.failed": "Failed to request MCP Editor tool resynchronization because the Editor service is not ready",
+  "editorSnapshot.invalid": "Invalid MCP Editor handler snapshot",
+  "editorSnapshot.versionInvalid": "Invalid MCP Editor handler snapshot version",
+  "editorSnapshot.handlerInvalid": "Invalid MCP Editor handler",
+  "editorSnapshot.kindInvalid": "Invalid MCP Editor handler type",
+  "editorSnapshot.nameMissing": "MCP Editor handler is missing a name",
+  "editorSnapshot.callbackMissing": "MCP Editor handler {{name}} is missing a callback ID",
+  "editorSnapshot.paramsInvalid": "MCP Editor handler {{name}} has invalid parameters",
+  "editorSnapshot.accessInvalid": "MCP Editor handler {{name}} has an invalid access type",
+  "editorSnapshot.revisionInvalid": "Invalid MCP Editor handler snapshot revision",
+  "editorSnapshot.actionAccessInvalid": "MCP Editor handler {{name}} has invalid action access",
+  "editorSnapshot.actionAccessTypeInvalid": "MCP Editor handler {{name}} has an invalid action access type"
+}
